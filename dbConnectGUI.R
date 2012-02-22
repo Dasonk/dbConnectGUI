@@ -897,3 +897,4 @@ Ex: 'Year IN (2001, 2003, 2007)' will match only years 2001, 2003, 2007
 #~ }
 
 DatabaseConnect()
+

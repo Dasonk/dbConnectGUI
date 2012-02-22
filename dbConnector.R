@@ -1,3 +1,18 @@
+
+#' Convert data types from SQL to R
+#'
+#' Takes a vector of SQL data types and and returns the corresponding
+#' data types in R.
+#'
+#' @param data The vector of SQL data types to convert
+#' @return A vector of R data types.
+#' @author Dason Kurkiewicz \email{dasonk@@iastate.edu}
+sqlToR <- function(data){
+    data[data %in% c("varchar", "char", "date", "text")] <- "character"
+    data[data %in% c("int", "decimal", "bigint", "double")] <- "numeric"
+    return(data)
+}
+
 dbConnector <- function(connection = NULL){
 
     ## Rename to j for ease of use
@@ -56,7 +71,7 @@ dbConnector <- function(connection = NULL){
     ## DATA VIEWER ##
     #################
 
-    dvNB <- gnotebook(expand = T)
+    dvNB <- gnotebook(expand = TRUE)
     dvNBList <- list()
 
     ## Preprocess the tables by creating
@@ -114,13 +129,65 @@ dbConnector <- function(connection = NULL){
     ## Variable Browser ##
     ######################
 
+    vbNB <- gnotebook(expand = TRUE)
+    vbNBList <- list()
 
+    ## Preprocess the tables by creating
+    ## a tab in the notebook
+    for(nm in names(dvNBList)){
+        vbNBList[[nm]] <- list()
+        vbNBList[[nm]]$group <- ggroup(hor = F, cont = vbNB,
+                                       label = nm, expand = TRUE)
+        vbNBList[[nm]]$activated <- FALSE
+    }
+
+    ## This handler gets called when the tab is changed
+    vbHandler <- function(h, ...){
+        nm <- names(vbNBList)[h$pageno]
+
+        ## If this tab isn't active yet then create it
+        if(!vbNBList[[nm]]$activated){
+            query <- paste("SELECT COLUMN_NAME, DATA_TYPE ",
+                           "FROM INFORMATION_SCHEMA.COLUMNS ",
+                           "WHERE table_name = '", nm, "'",
+                           sep = "")
+            table <- dbGetQuery(con, query)
+            table$R_DATA_TYPE = sqlToR(table[,"DATA_TYPE"])
+            vbNBList[[nm]]$table <<- gtable(table)
+            add(vbNBList[[nm]]$group, vbNBList[[nm]]$table, expand = TRUE)
+            vbNBList[[nm]]$activated <<- TRUE
+        }
+    }
+
+    addHandlerChanged(vbNB, handler = vbHandler)
+
+    ## If there is only one table manually activate handler
+    if(length(dvNBList) == 1){
+        vbHandler(list(pageno = 1))
+    }
+
+    ## Change to the first tab to activate handler
+    svalue(vbNB) <- 1
+    add(vbGroup, vbNB, expand = TRUE)
+
+
+    ################
+    ## SubSample  ##
+    ################
+
+    ## Nothing Yet
+
+    ################
+    ## Query      ##
+    ################
+
+    ## Nothing Yet
 }
 
 ## library(gWidgets)
 ## library(gWidgetsRGtk2)
 ## gwindow()
 ## source("getConnection.R")
-j <- getConnection()
-
-dbConnector(j$connection)
+## j <- getConnection()
+##
+## dbConnector(j$connection)
