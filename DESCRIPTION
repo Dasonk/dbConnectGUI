@@ -1,0 +1,24 @@
+Package: dbConnectGUI
+Type: Package
+Title: A GUI to connect to MySQL databases
+Version: 0.1.0
+Date: 2012-06-02
+Author@R: person("Dason", "Kurkiewicz",
+    role = c("aut", "ctb", "cre"),
+    email = "dasonk@iastate.edu"))
+Author: Dason Kurkiewicz <dasonk@iastate.edu>
+Maintainer: Dason Kurkiewicz <dasonk@iastate.edu>
+Depends:
+    R (>= 2.13.0)
+gWidgetsRGtk2
+Suggests:
+    RMySQL
+Description: This provides GUIs to connect to and explore MySQL
+    databases.  This is meant for first time MySQL users and
+    doesn't provide the full functionality of MySQL.
+License: GPL-2
+URL: https://github.com/Dasonk/dbConnectGUI
+Collate:
+    'dbConnectGUI.R'
+    'getConnection.R'
+    'sqltoR.R'
