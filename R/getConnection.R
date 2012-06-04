@@ -4,7 +4,7 @@
 #' database.
 #' 
 #' @export
-#' @example
+#' @examples
 #' \dontrun{
 #' conn <- getConnection()
 #' dbConnectGUI(conn)
@@ -107,7 +107,10 @@ getConnection <- function(){
         ## }
     }
 
-    return(list(connection = con, driver = drv, status = status, error = errormessage))
+    return(list(connection = con, 
+                driver = drv, 
+                status = status, 
+                error = errormessage))
 
 }
 

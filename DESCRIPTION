@@ -9,8 +9,8 @@ Author@R: person("Dason", "Kurkiewicz",
 Author: Dason Kurkiewicz <dasonk@iastate.edu>
 Maintainer: Dason Kurkiewicz <dasonk@iastate.edu>
 Depends:
-    R (>= 2.13.0)
-gWidgetsRGtk2
+    R (>= 2.13.0),
+    gWidgetsRGtk2
 Suggests:
     RMySQL
 Description: This provides GUIs to connect to and explore MySQL
